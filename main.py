@@ -112,22 +112,25 @@ def func(message):
                 if(len(mes) != 5):
                     bot.send_message(message.chat.id, "Введите, пожалуйста фразу в виде Прогноз погоды на x дней")
                 else:
-                    if (int(mes[3]) < 0) or (int(mes[3]) > 5):
-                        bot.send_message(message.chat.id, "Напоминаю количество дней должно быть меньше 5, но больше 0")
-                    else:
-                        r = requests.get('http://api.openweathermap.org/data/2.5/forecast?&units=metric&q=%s&appid=0c9f3c052f1d81b7062750ff0926f345' %(city), params={'lang': 'ru'})
-                        data = r.json()
-                        str1 = ""
-                        k = 0
-                        start = -2
-                        for i in data['list']:
-                            if (int(i['dt_txt'][8:10]) != start):
-                                k = k+1
-                                start = int(i['dt_txt'][8:10])
-                                if ( k > int(mes[3])):
-                                    break
-                            str1 = str1 +  str(i['dt_txt']) + " "  + '{0:+3.0f}'.format(i['main']['temp']) +  " " + i['weather'][0]['description'] + "\n"
-                        bot.send_message(message.chat.id, str1)
+                    try:
+                        if (int(mes[3]) < 0) or (int(mes[3]) > 5):
+                            bot.send_message(message.chat.id, "Напоминаю количество дней должно быть меньше 5, но больше 0")
+                        else:
+                            r = requests.get('http://api.openweathermap.org/data/2.5/forecast?&units=metric&q=%s&appid=0c9f3c052f1d81b7062750ff0926f345' %(city), params={'lang': 'ru'})
+                            data = r.json()
+                            str1 = ""
+                            k = 0
+                            start = -2
+                            for i in data['list']:
+                                if (int(i['dt_txt'][8:10]) != start):
+                                    k = k+1
+                                    start = int(i['dt_txt'][8:10])
+                                    if ( k > int(mes[3])):
+                                        break
+                                str1 = str1 +  str(i['dt_txt']) + " "  + '{0:+3.0f}'.format(i['main']['temp']) +  " " + i['weather'][0]['description'] + "\n"
+                            bot.send_message(message.chat.id, str1)
+                    except:
+                            bot.send_message(message.chat.id, "Напоминаю количество дней должно быть меньше 5, но больше 0")
             else:
                 if (message.text.lower()=="поменять город"):
                     city = ""
